@@ -1,0 +1,15 @@
+{
+  "name": "email-signature-generator",
+  "version": "0.0.1",
+  "description": "create package of html e-mail signature from csv file and template in josn file",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "convert-csv-to-json": "0.0.15",
+    "fs": "0.0.1-security",
+    "glob": "^7.1.4"
+  }
+}
