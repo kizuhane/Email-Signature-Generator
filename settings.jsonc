@@ -1,0 +1,7 @@
+{
+  // File extension of output files
+  "OutputFileExtension":"html",
+  // Save All output in one file
+
+  "SaveAllInOneFile":"true"
+}
