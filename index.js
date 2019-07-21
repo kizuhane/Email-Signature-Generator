@@ -2,16 +2,43 @@ const fs = require('fs');
 const glob = require('glob');
 const csvToJson = require('convert-csv-to-json');
 
+//Default setting
+let settingFileDefault = `{
+    // File extension of output files
+    "OutputFileExtension":"html",
+    // Save All output in one file
+    "SaveAllInOneFile":"true"
+}`;
+
 //change string to templete string
 const fillTemplate = (templateString, templateVars) => {
   return new Function('return `' + templateString + '`;').call(templateVars);
 };
 
+//call main function
+GenerateSignature();
+
 function getSetting() {
   return new Promise((resolve, reject) => {
     fs.readFile('settings.jsonc', function(err, data) {
-      if (err) return console.error(err);
-      resolve(JSON.parse(data.toString().replace(/(\/\*[\s\S]*?(.*)\*\/)|(\/\/.*)/gm, '')));
+      if (err) {
+        if (err.code === 'ENOENT') {
+          console.log("ERROR : can't find setting file");
+          fs.writeFile('settings.jsonc', settingFileDefault, err => {
+            if (err) throw err;
+          });
+          return console.log(
+            'Created Default Setting File, run program again with default setting'
+          );
+        } else {
+          return console.error(err);
+        }
+      }
+      resolve(
+        JSON.parse(
+          data.toString().replace(/(\/\*[\s\S]*?\*\/)|(([^:"\S]|^|(\S\"[^\S]?))\/\/.*$)/gm, '')
+        )
+      );
     });
   });
 }
@@ -38,26 +65,27 @@ async function getData() {
   const setting = await getSetting();
   const templateVars = signatureTemplate.PersonalData;
   const templateString = signatureTemplate.HTMLTemplate;
-
+  /*
   Object.keys(dataBase[0]).forEach((element, index) => {
-    // console.log('-' + element);
-    // if (
-    //   element ===
-    //   templateVars.forEach(el => {
-    //     console.log('---' + el);
-    //     if (element == el) return;
-    //   })
-    // )
-    //   console.log('true');
-    // if (element != templateVars[index]) {
-    //   console.log(
-    //     `ERROR : Arguments form temple don't mach data base header \n  DataBase(${element}) != Template(${
-    //       templateVars[index]
-    //     })`
-    //   );
-    //   process.exit(1);
-    // }
+    console.log('-' + element);
+    if (
+      element ===
+      templateVars.forEach(el => {
+        console.log('---' + el);
+        if (element == el) return;
+      })
+    )
+      console.log('true');
+    if (element != templateVars[index]) {
+      console.log(
+        `ERROR : Arguments form temple don't mach data base header \n  DataBase(${element}) != Template(${
+          templateVars[index]
+        })`
+      );
+      process.exit(1);
+    }
   });
+  */
   return {
     templateString: templateString,
     templateVars: templateVars,
@@ -68,28 +96,36 @@ async function getData() {
 
 async function GenerateSignature() {
   const files = await getData();
+
   if (files.settings.SaveAllInOneFile == 'true') {
     try {
       let content = [];
-      fs.writeFile(
-        `output/SavedTemplates.${files.settings.OutputFileExtension}`,
-        (content = files.dataBase.forEach((element, index) => {
-          content = content + index;
-          return content;
-          // fillTemplate(files.templateString, files.dataBase[index]);
-          /*console.log(
+      files.dataBase.forEach((element, index) => {
+        try {
+          content +=
+            `<!-- ${element.name} ${element.surname} - ${element.job_position}--> \n` +
+            fillTemplate(files.templateString, files.dataBase[index]) +
+            '\n\n';
+          console.log(
             `${index}/${files.dataBase.length} : "${element.name} ${element.surname} - ${
               element.job_position
             }" | ✓`
-          );*/
-        })),
-        err => {
-          if (err) {
-            throw err;
-          }
-          console.log(`SavedTemplates.${files.settings.OutputFileExtension} | ✓`);
+          );
+        } catch (error) {
+          console.log(
+            `${index}/${files.dataBase.length} : "${element.name} ${element.surname} - ${
+              element.job_position
+            }" | ✕`
+          );
         }
-      );
+      });
+      console.log(content);
+      fs.writeFile(`output/SavedTemplates.${files.settings.OutputFileExtension}`, content, err => {
+        if (err) {
+          throw err;
+        }
+        console.log(`SavedTemplates.${files.settings.OutputFileExtension} | ✓`);
+      });
     } catch (error) {
       throw error;
     }
@@ -130,4 +166,3 @@ async function GenerateSignature() {
     });
   }
 }
-GenerateSignature();
