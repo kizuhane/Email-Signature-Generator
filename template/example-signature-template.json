@@ -5,7 +5,7 @@
     "job_position",
     "email",
     "phone",
-    "ggNumers"
+    "ggNumer"
   ],
   "HTMLTemplate":"<p align='left'>Pozdrawiam,<br><b>${this.name} ${this.surname}</b> - ${this.job_position}<br><b>e-mail: </b><a href='mailto:${this.email}'>${this.email}</a><b> tel. </b>${this.phone}<b> GG: </b>${this.ggNumer}<b> Discord: </b><a href='https://discord.gg/nuJ46RG'>https://discord.gg/nuJ46RG</a><br>'Leszczyńscy' s.c. Angelika i Mariusz Leszczyńscy <br>77-400 Złotów, ul. Wojska Polskiego 2, redakcja@aktualnoscilokalne.pl, tel./fax 067 263 56 63 <br><img src='http://www.leszczynscy.nazwa.pl/leszczynscy.pl/wp-content/uploads/newsletter/loga.png'></p>"
 }
