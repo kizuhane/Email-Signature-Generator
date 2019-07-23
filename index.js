@@ -96,7 +96,7 @@ async function getData() {
 
 async function GenerateSignature() {
   const files = await getData();
-  /*
+
   if (files.settings.SaveAllInOneFile == 'true') {
     try {
       let content = [];
@@ -165,5 +165,4 @@ async function GenerateSignature() {
       }
     });
   }
-  */
 }
