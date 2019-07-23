@@ -59,33 +59,33 @@ function getCSV(path) {
   });
 }
 
+function CheckElement(object, array) {
+  for (let i = 0; i < array.length; i++) {
+    for (let j = 0; j < object.length; j++) {
+      if (object[j] === array[i]) {
+        break;
+      }
+      if (j + 1 == object.length) {
+        console.log(
+          `ERROR : Arguments form temple don't mach data base header \n  Can't find Template(${
+            array[i]
+          })`
+        );
+        process.exit(1);
+      }
+    }
+  }
+}
+
 async function getData() {
   const signatureTemplate = await getJSON(glob.sync('template/*.json').toString());
   const dataBase = await getCSV(glob.sync('database/*.csv').toString());
   const setting = await getSetting();
   const templateVars = signatureTemplate.PersonalData;
   const templateString = signatureTemplate.HTMLTemplate;
-  /*
-  Object.keys(dataBase[0]).forEach((element, index) => {
-    console.log('-' + element);
-    if (
-      element ===
-      templateVars.forEach(el => {
-        console.log('---' + el);
-        if (element == el) return;
-      })
-    )
-      console.log('true');
-    if (element != templateVars[index]) {
-      console.log(
-        `ERROR : Arguments form temple don't mach data base header \n  DataBase(${element}) != Template(${
-          templateVars[index]
-        })`
-      );
-      process.exit(1);
-    }
-  });
-  */
+
+  CheckElement(Object.keys(dataBase[0]), templateVars);
+
   return {
     templateString: templateString,
     templateVars: templateVars,
@@ -96,7 +96,7 @@ async function getData() {
 
 async function GenerateSignature() {
   const files = await getData();
-
+  /*
   if (files.settings.SaveAllInOneFile == 'true') {
     try {
       let content = [];
@@ -165,4 +165,5 @@ async function GenerateSignature() {
       }
     });
   }
+  */
 }

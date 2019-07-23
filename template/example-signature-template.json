@@ -5,7 +5,7 @@
     "job_position",
     "email",
     "phone",
-    "ggNumers"
+    "ggNumer"
   ],
   "HTMLTemplate":"<p align='left'>Greetings,<br/><b>${this.name} ${this.surname}</b> - ${this.job_position}<br/><b>e-mail:</b> <a href='mailto:${this.email}'>${this.email}</a> | <b>tel.</b> ${this.phone} | <b>GG:</b> ${this.ggNumer} | <b>Discord:</b> <a href='https://discord.gg/InviteCode'>InviteCode</a><br/>'Company Name' s.c. Company Owner<br/>99-999 City Name, st. Street name 0, cntact@companyname.com, tel./fax 999 999 99 99<br/><img src='https://placehold.co/300x100?text=Company+Logo'/></p>"
 }
