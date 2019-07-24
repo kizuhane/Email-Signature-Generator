@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Jakielartur@gmail.com",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "convert-csv-to-json": "0.0.15",
     "fs": "0.0.1-security",
