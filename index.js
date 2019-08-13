@@ -4,16 +4,24 @@ const csvToJson = require('convert-csv-to-json');
 
 //Default setting
 let settingFileDefault = `{
-    // File extension of output files
     "OutputFileExtension":"html",
-    // Save All output in one file
-    "SaveAllInOneFile":"true"
+    "SaveAllInOneFile":"false",
+    "OutputFileName":"SavedTemplates"
 }`;
 
 //change string to templete string
 const fillTemplate = (templateString, templateVars) => {
   return new Function('return `' + templateString + '`;').call(templateVars);
 };
+//change format from 1,2..15 to 01,02..15
+function numbering(number, padLength, z) {
+  z = z || '0';
+  number = number + 1 + '';
+  padLength = padLength.toString().length;
+  return number.length >= padLength
+    ? number
+    : new Array(padLength - number.length + 1).join(z) + number;
+}
 
 //call main function
 GenerateSignature();
@@ -98,68 +106,81 @@ async function GenerateSignature() {
   const files = await getData();
 
   if (files.settings.SaveAllInOneFile == 'true') {
+    //save all template in one file
     try {
       let content = [];
       files.dataBase.forEach((element, index) => {
         try {
           content +=
-            `<!-- ${element.name} ${element.surname} - ${element.job_position}--> \n` +
+            `<!-- ${numbering(index, files.dataBase.length)}-${fillTemplate(
+              files.settings.OutputFileName,
+              files.dataBase[index]
+            )}--> \n` +
             fillTemplate(files.templateString, files.dataBase[index]) +
             '\n\n';
           console.log(
-            `${index}/${files.dataBase.length} : "${element.name} ${element.surname} - ${
-              element.job_position
-            }" | ✓`
+            `${numbering(index, files.dataBase.length)}/${files.dataBase.length} : "${fillTemplate(
+              files.settings.OutputFileName,
+              files.dataBase[index]
+            )}" | ✓`
           );
         } catch (error) {
           console.log(
-            `${index}/${files.dataBase.length} : "${element.name} ${element.surname} - ${
-              element.job_position
-            }" | ✕`
+            `${numbering(index, files.dataBase.length)}/${files.dataBase.length} : "${fillTemplate(
+              files.settings.OutputFileName,
+              files.dataBase[index]
+            )}" | ✕`
           );
         }
       });
-      console.log(content);
-      fs.writeFile(`output/SavedTemplates.${files.settings.OutputFileExtension}`, content, err => {
-        if (err) {
-          throw err;
+      // console.log(content);
+      fs.writeFile(
+        `output/${files.settings.OutputFileName}.${files.settings.OutputFileExtension}`,
+        content,
+        err => {
+          if (err) {
+            throw err;
+          }
+          console.log(`───────────────────────────────────\n${files.settings.OutputFileName}} | ✓`);
         }
-        console.log(`SavedTemplates.${files.settings.OutputFileExtension} | ✓`);
-      });
+      );
     } catch (error) {
       throw error;
     }
   }
 
   if (files.settings.SaveAllInOneFile == 'false') {
+    //save file in separate files
     files.dataBase.forEach((element, index) => {
       try {
         fs.writeFile(
-          `output/${element.name} ${element.surname} - ${element.job_position}.${
-            files.settings.OutputFileExtension
-          }`,
+          `output/${numbering(index, files.dataBase.length)}-${fillTemplate(
+            files.settings.OutputFileName,
+            files.dataBase[index]
+          )}.${files.settings.OutputFileExtension}`,
           fillTemplate(files.templateString, files.dataBase[index]),
           err => {
             if (err) {
               console.log(
-                `${index}/${files.dataBase.length} : "${element.name} ${element.surname} - ${
-                  element.job_position
-                }" | ✕`
+                `${numbering(index, files.dataBase.length)}/${
+                  files.dataBase.length
+                } : "${fillTemplate(files.settings.OutputFileName, files.dataBase[index])}" | ✕`
               );
               throw err;
             }
             console.log(
-              `${index}/${files.dataBase.length} : "${element.name} ${element.surname} - ${
-                element.job_position
-              }" | ✓`
+              `${numbering(index, files.dataBase.length)}/${
+                files.dataBase.length
+              } : "${fillTemplate(files.settings.OutputFileName, files.dataBase[index])}" | ✓`
             );
           }
         );
       } catch (error) {
         console.log(
-          `${index}/${files.dataBase.length} : "${element.name} ${element.surname} - ${
-            element.job_position
-          }" | ✕`
+          `${numbering(index, files.dataBase.length)}/${files.dataBase.length} : "${fillTemplate(
+            files.settings.OutputFileName,
+            files.dataBase[index]
+          )}" | ✕`
         );
         throw error;
       }
