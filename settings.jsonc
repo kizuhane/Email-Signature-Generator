@@ -3,8 +3,8 @@
   "OutputFileExtension":"html",
 
   // Save All output in one file
-  "SaveAllInOneFile":"true",
+  "SaveAllInOneFile":"false",
 
-  //Name of file when saved in multiple file use template string formula with names from database to create unique names
-  "OutputFileName":"${this.name}-${this.surname}--${this.job_position}"
+  //Name of file, when saved in multiple file amiable is using template string formula with names from database to create unique names
+  "OutputFileName":"${this.firstName} ${this.lastName}"
 }
