@@ -3,30 +3,29 @@ Create a package of e-mail signature from database in svg file using template cr
 
 
 ## Usage
-Basic usage is creating e-mail signature, but script can generate anything 
-
+Basic usage is creating e-mail signature, but the script can generate any type of repetitive text as long as possible is refer to headers from csv database in template string
 
 
 ## Instruction
 
 ### Installation
+- instal latest [node.js](https://nodejs.org/)
+- clone repository to own computer
+- install node_modules
 
 ### Setup
+**`DataBase`** in this folder place a database in csv format separate with **;** (semicolon)
 
-#### DataBase
-in folder
-
-#### Template file
-in folder template save a json file wich
+**`Template file`** in this folder place a template in json file with
 
 ```json
 {
-  "PersonalData":["DataHeader"],
-  "Template":"Lorem Ipsum ${this.DataHeader}"}
+  "PersonalData":["DataKey"],
+  "Template":"Lorem Ipsum ${this.DataKey}"}
 ```
 
 where:
-- `PersonalData` Name for each variable header from Database
+- `PersonalData` Name for each variable key from Database
 - `Template` is actual template what will be filled using data from database. Content is formated to [JavaScript Template strings](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) so to put data you need call it using _${this.DataHeader}_
 
 
@@ -60,7 +59,7 @@ Default Option:
 ```
 
 #### OutputFileName
-Name of file when result of script saved in one file
+File name of generated output
 
 Valid options:
 - Any valid file name
@@ -69,6 +68,8 @@ Default Option:
 ```json
 "OutputFileName":"SavedTemplates"
 ```
+> When saved in multiple files available is using javascript template string to create unique names like in template file: "${this.keyName}"
+
 ## Example
 Headers form Databese need be the same as object.keys in json template.
 

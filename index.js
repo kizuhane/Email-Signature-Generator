@@ -90,7 +90,7 @@ async function getData() {
   const dataBase = await getCSV(glob.sync('database/*.csv').toString());
   const setting = await getSetting();
   const templateVars = signatureTemplate.PersonalData;
-  const templateString = signatureTemplate.HTMLTemplate;
+  const templateString = signatureTemplate.Template;
 
   CheckElement(Object.keys(dataBase[0]), templateVars);
 
@@ -111,13 +111,7 @@ async function GenerateSignature() {
       let content = [];
       files.dataBase.forEach((element, index) => {
         try {
-          content +=
-            `<!-- ${numbering(index, files.dataBase.length)}-${fillTemplate(
-              files.settings.OutputFileName,
-              files.dataBase[index]
-            )}--> \n` +
-            fillTemplate(files.templateString, files.dataBase[index]) +
-            '\n\n';
+          content += fillTemplate(files.templateString, files.dataBase[index]) + '\n\n';
           console.log(
             `${numbering(index, files.dataBase.length)}/${files.dataBase.length} : "${fillTemplate(
               files.settings.OutputFileName,
@@ -141,7 +135,9 @@ async function GenerateSignature() {
           if (err) {
             throw err;
           }
-          console.log(`───────────────────────────────────\n${files.settings.OutputFileName}} | ✓`);
+          console.log(
+            `───────────────────────────────────\nDONE -- ${files.settings.OutputFileName}} | ✓`
+          );
         }
       );
     } catch (error) {
