@@ -9,7 +9,7 @@ let settingFileDefault = `{
     "OutputFileName":"SavedTemplates"
 }`;
 
-//change string to templete string
+//change string to template string
 const fillTemplate = (templateString, templateVars) => {
   return new Function('return `' + templateString + '`;').call(templateVars);
 };
@@ -75,9 +75,7 @@ function CheckElement(object, array) {
       }
       if (j + 1 == object.length) {
         console.log(
-          `ERROR : Arguments form temple don't mach data base header \n  Can't find Template(${
-            array[i]
-          })`
+          `ERROR : Arguments form temple don't mach data base header \n  Can't find Template(${array[i]})`
         );
         process.exit(1);
       }
@@ -108,10 +106,12 @@ async function GenerateSignature() {
   if (files.settings.SaveAllInOneFile == 'true') {
     //save all template in one file
     try {
-      let content = [];
+      let streamFile = fs.createWriteStream(
+        `output/${files.settings.OutputFileName}.${files.settings.OutputFileExtension}`
+      );
       files.dataBase.forEach((element, index) => {
         try {
-          content += fillTemplate(files.templateString, files.dataBase[index]) + '\n\n';
+          streamFile.write(fillTemplate(files.templateString, files.dataBase[index]) + '\n\n');
           console.log(
             `${numbering(index, files.dataBase.length)}/${files.dataBase.length} : "${fillTemplate(
               files.settings.OutputFileName,
@@ -127,19 +127,6 @@ async function GenerateSignature() {
           );
         }
       });
-      // console.log(content);
-      fs.writeFile(
-        `output/${files.settings.OutputFileName}.${files.settings.OutputFileExtension}`,
-        content,
-        err => {
-          if (err) {
-            throw err;
-          }
-          console.log(
-            `───────────────────────────────────\nDONE -- ${files.settings.OutputFileName}} | ✓`
-          );
-        }
-      );
     } catch (error) {
       throw error;
     }
